@@ -1,0 +1,53 @@
+---
+format: 
+
+    html:
+
+        embed-resources: true
+
+        toc: true
+
+        toc-title: ' '
+
+        toc-location: left
+
+editor: visual
+---
+
+# Over-Sampling
+
+## SMOTE
+
+Synthetic Minority Over-sampling Technique (SMOTE) é uma abordagem de over-sampling na qual a classe minoritária é sobreamostrada criando observações 'sintéticas'. Para cada observação da classe minoritária $x_m$ e cada um dos seus $k$ vizinhos mais próximos $x_v$ é gerada uma nova observação sintética $x_s$ da seguinte forma:
+
+$$x_s = u(x_v - x_m) + x_m$$
+
+onde $u \sim U[0, 1]$. Portanto $x_s$ é um ponto aleatório do segmentos de reta que une $x_m$ e $x_v$. Esse processo é repetido para todas as observações da classe minoritária e para cada um de seus $k$ vizinhos, até que o número desejado de exemplos sintéticos seja gerado. Geralmente o valor de $k$ é definido como 5, pois oferece um bom equilíbrio entre a diversidade dos exemplos gerados e a proximidade com a observação original.
+
+### SMOTE-NC
+
+Synthetic Minority Over-sampling Technique-Nominal Continuous (SMOTE-NC) é uma generalização do SMOTE para lidar com conjuntos de dados que combinam variáveis contínuos e nominais. Para cada observação da classe minoritária $x_m$ calcula-se a sua distância com as outras observações $x_i$, da seguinte forma:
+
+$$d(x_m, x_i) =  \sqrt{\sum_{j \in \textnormal{con}} (x_{mj} - x_{ij})^2 + \sum_{l \in \textnormal{diff}} \sigma^*}$$ 
+
+onde $\sigma^*$ é a mediana dos desvios padrões das variavéis continuas das observações da classe minoritária, con é o conjunto das variáveis continuas e diff é o conjunto das variáveis nominais que tem classes diferentes entre $x_m$ e $x_i$. As obervações sintéticas $x_s$ de $x_m$ são definidas da mesma maneira que o SMOTE para as coordenadas continuas e a categoria mais frequente entre os $k$-vizinhos mais próximos para as coordenadas nominais.
+
+### SMOTE-N
+
+Synthetic Minority Over-sampling Technique-Nominal (SMOTE-N) é uma alternativa ao SMOTE para lidar com conjuntos de dados que só tem variáveis nominais. Para cada observação da classe minoritária $x_m$ calcula-se a sua distância com as outras observações $x_i$, da seguinte forma:
+
+$$\textnormal{VDM}(x_m, x_i) = \sum_{d = 1}^D \delta(x_{md}, x_{id})^2$$
+
+onde $D$ é o número de covariáveis e $\delta$ é dados pela fórmula:
+
+$$\delta(x_{md}, x_{id}) = \sum_{j = 0}^{1} |\mathbb{P}[y = j \mid x_{md}] - \mathbb{P}[y = j \mid x_{id}]|$$
+
+As obervações sintéticas $x_s$ de $x_m$ definidas da mesma maneira que o SMOTE-NC para variáveis nominais.
+
+## ADASYN
+
+Adaptive Synthetic Sampling (ADASYN) é outro ao abordagem de over-sampling que cria observações sintéticas da mesma maneira que o SMOTE, porém a quantiadde de observações sintéticas geradas por covariáveis da classe minoritária é igualmente distribuida. Seja $G$ o número de maostras sintéticas que devem ser geradas, a proporção de amostras sintéticas geradas pela observação $x_m$:
+
+$$\hat{r}_m \propto \varDelta_i/k$$
+
+onde $\varDelta_i$ é quantidade de observações da classe majoritária entre os $k$ vizinhos mais próximos.
